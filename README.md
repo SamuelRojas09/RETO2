@@ -1,122 +1,128 @@
 # RETO2
 ```mermaid
 classDiagram
+    direction TB
 
-class Condominio {
-    -nombre : string
-    -direccion : string
-    -listaDepartamentos : List
-    -listaResidentes : List
-    -listaAreasComunes : List
-    -listaParqueaderos : List
-    -listaMultas : List
-    -listaGuardias : List
-    +agregarDepartamento()
-    +registrarResidente()
-    +agregarAreaComun()
-    +agregarParqueadero()
-    +registrarMulta()
-    +contratarGuardia()
-    +generarReportePagos()
-}
+    class Condominio {
+        -nombre : String
+        -direccion : String
+        -listaDepartamentos : List
+        -listaResidentes : List
+        -listaAreasComunes : List
+        -listaParqueaderos : List
+        -listaMultas : List
+        -listaGuardias : List
+        +agregarDepartamento()
+        +registrarResidente()
+        +agregarAreaComun()
+        +agregarParqueadero()
+        +registrarMulta()
+        +contratarGuardia()
+        +generarReportePagos()
+    }
 
-class Departamento {
-    -numero : int
-    -piso : int
-    -estadoPago : bool
-    +asignarPropietario()
-    +agregarResidente()
-    +registrarPago()
-}
+    class Departamento {
+        -numero : int
+        -piso : int
+        -estadoPago : bool
+        +asignarPropietario()
+        +agregarResidente()
+        +registrarPago()
+    }
 
-class Residente {
-    -nombre : string
-    -idResidente : int
-    -telefono : string
-    +pagarMantenimiento()
-    +reservarArea()
-    +registrarVisita()
-}
+    class Residente {
+        -nombre : String
+        -idResidente : int
+        -telefono : String
+        +pagarMantenimiento()
+        +reservarArea()
+        +registrarVisita()
+    }
 
-class Administrador {
-    +aprobarReserva()
-    +aplicarMulta()
-    +generarReportes()
-}
+    class Administrador {
+        +aprobarReserva()
+        +aplicarMulta()
+        +generarReportes()
+    }
 
-class AreaComun {
-    -nombre : string
-    -capacidad : int
-    +reservar()
-    +cancelarReserva()
-    +verificarDisponibilidad()
-}
+    class AreaComun {
+        -nombre : String
+        -capacidad : int
+        +reservar()
+        +cancelarReserva()
+        +verificarDisponibilidad()
+    }
 
-class Reserva {
-    -fecha : string
-    -hora : string
-    -estado : string
-    +confirmarReserva()
-    +cancelarReserva()
-}
+    class Reserva {
+        -fecha : String
+        -hora : String
+        -estado : String
+        +confirmarReserva()
+        +cancelarReserva()
+    }
 
-class Pago {
-    -monto : float
-    -fecha : string
-    -estado : string
-    +procesarPago()
-    +generarComprobante()
-}
+    class Pago {
+        -monto : float
+        -fecha : String
+        -estado : String
+        +procesarPago()
+        +generarComprobante()
+    }
 
-class Parqueadero {
-    -numero : int
-    -disponible : bool
-    +asignarResidente()
-    +liberar()
-}
+    class Parqueadero {
+        -numero : int
+        -disponible : bool
+        +asignarResidente()
+        +liberar()
+    }
 
-class Multa {
-    -motivo : string
-    -monto : float
-    -fecha : string
-    -estado : string
-    +generarMulta()
-    +pagarMulta()
-}
+    class Multa {
+        -motivo : String
+        -monto : float
+        -fecha : String
+        -estado : String
+        +generarMulta()
+        +pagarMulta()
+    }
 
-class Visitante {
-    -nombre : string
-    -documento : string
-    -fechaIngreso : string
-    -horaIngreso : string
-    -horaSalida : string
-    +registrarEntrada()
-    +registrarSalida()
-}
+    class Visitante {
+        -nombre : String
+        -documento : String
+        -fechaIngreso : String
+        -horaIngreso : String
+        -horaSalida : String
+        +registrarEntrada()
+        +registrarSalida()
+    }
 
-class Guardia {
-    -nombre : string
-    -turno : string
-    +verificarIngreso()
-    +registrarIncidente()
-}
+    class Guardia {
+        -nombre : String
+        -turno : String
+        +verificarIngreso()
+        +registrarIncidente()
+    }
 
-Condominio "1" *-- "many" Departamento
-Condominio "1" *-- "many" AreaComun
-Condominio "1" *-- "many" Parqueadero
-Condominio "1" -- "many" Multa
-Condominio "1" -- "many" Guardia
+    %% ================= RELACIONES =================
 
-Departamento "1" -- "many" Residente
+    %% Composición
+    Condominio "1" *-- "1..*" Departamento
+    Condominio "1" *-- "1..*" AreaComun
+    Condominio "1" *-- "0..*" Parqueadero
 
-Residente "1" -- "many" Pago
-Residente "1" -- "many" Reserva
-Residente "1" -- "many" Multa
-Residente "1" -- "many" Visitante
+    %% Agregación
+    Condominio "1" o-- "0..*" Guardia
+    Condominio "1" o-- "0..*" Multa
 
-AreaComun "1" -- "many" Reserva
-Parqueadero "1" -- "0..1" Residente
+    %% Asociaciones
+    Departamento "1" --> "0..*" Residente
+    Residente "1" --> "0..*" Pago
+    Residente "1" --> "0..*" Reserva
+    Residente "1" --> "0..*" Multa
+    Residente "1" --> "0..*" Visitante
+    AreaComun "1" --> "0..*" Reserva
+    Parqueadero "1" --> "0..1" Residente
+    Guardia "1" --> "0..*" Visitante
+
+    %% Herencia
+    Administrador --|> Residente
 ```
-
-Administrador --|> Residente
-Guardia "1" -- "many" Visitante
